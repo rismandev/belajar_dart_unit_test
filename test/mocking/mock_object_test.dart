@@ -7,7 +7,7 @@ import 'package:test/test.dart';
 import 'mock_object_test.mocks.dart';
 
 void main() {
-  group("Test Mock Object", () {
+  group("Test Mock Object =>", () {
     late MockBookRepository bookRepository;
     late BookUseCase bookUseCase;
 
@@ -43,6 +43,17 @@ void main() {
       expect(book, BookModel("1", "Buku Saham", 20000));
 
       verify(bookRepository.findById("1")).called(1);
+    });
+
+    test("Test Argument Matcher in Mockito", () {
+      when(
+        bookRepository.findById(argThat(startsWith("bookId"))),
+      ).thenReturn(BookModel("bookId123", "Buku Saham", 20000));
+
+      final book = bookUseCase.find("bookId123");
+      expect(book, BookModel("bookId123", "Buku Saham", 20000));
+
+      verify(bookRepository.findById(argThat(startsWith("bookId")))).called(1);
     });
   });
 }
